@@ -15,6 +15,7 @@ public class ProtonConnector : MonoBehaviourPunCallbacks
     [SerializeField] public GameObject Lobby;
     [SerializeField] public GameObject Join;
     [SerializeField] public TMP_InputField JoinRoomCode;
+    [SerializeField] TextMeshProUGUI Roomcode;
     public static Action GetPhotonFriends = delegate { };
 
     #region Unity Method
@@ -68,7 +69,9 @@ public class ProtonConnector : MonoBehaviourPunCallbacks
         roomOptions.IsVisible = true;
         PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
         Debug.Log($"Create Room {roomName}");
-        ScreenController.LoadScreen("Ingame");
+        //ScreenController.LoadScreen("Ingame");
+        ScreenController.LoadScreen("ConfigRoom");
+        Debug.Log("=====> ConfigRoom Loaded <=====");
     }
     private void HandleRoomInviteAccept(string roomName)
     {
@@ -134,11 +137,15 @@ public class ProtonConnector : MonoBehaviourPunCallbacks
     public override void OnCreatedRoom()
     {
         Debug.Log($"Room Created {PhotonNetwork.CurrentRoom.Name}");
+        //Roomcode.text = PhotonNetwork.CurrentRoom.Name;
     }
     public override void OnJoinedRoom()
     {
         Debug.Log($"Joined to Room {PhotonNetwork.CurrentRoom.Name}");
         Debug.Log($"Number of players in the room: {PhotonNetwork.CurrentRoom.PlayerCount}");
+        GetPhotonFriends?.Invoke();
+        Debug.Log("GetPhotonFriends Invoked");
+
     }
     public override void OnLeftRoom()
     {

@@ -50,7 +50,7 @@ public class UIDisplayInvites : MonoBehaviour
         {
             invites.Remove(invite);
             Destroy(invite.gameObject);
-            ScreenController.LoadScreen("Ingame");
+            ScreenController.LoadScreen("InGame");
         }
     }
 

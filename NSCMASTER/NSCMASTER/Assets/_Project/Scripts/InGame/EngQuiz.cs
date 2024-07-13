@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using Photon.Pun;
 
 namespace Photon.Pun.Demo.PunBasics
 {
-    public class EngQuiz : MonoBehaviour
+    public class EngQuiz : MonoBehaviourPunCallbacks
     {
         [Header("UI Elements")]
         [SerializeField] TextMeshProUGUI Question;
@@ -57,10 +58,20 @@ namespace Photon.Pun.Demo.PunBasics
 
         public void ShowQuizPanel(GameObject item)
         {
-            itemToDestroy = item;
-            QuizPanel.SetActive(true);
-            DisplayNewQuestion();
-            Debug.Log("Show Quiz Panel");
+            // ตรวจสอบว่าเป็นผู้เล่นที่เจอกล่องหรือไม่
+            if (item.GetComponent<PhotonView>().IsMine)
+            {
+                itemToDestroy = item;
+                QuizPanel.SetActive(true);
+                DisplayNewQuestion();
+                Debug.Log("Show Quiz Panel for local player");
+            }
+        }
+
+        [PunRPC]
+        void DestroyItemRPC(int viewID)
+        {
+            PhotonView.Find(viewID).gameObject.SetActive(false);
         }
 
         void DisplayNewQuestion()
@@ -87,15 +98,19 @@ namespace Photon.Pun.Demo.PunBasics
                 Feedback.text = "ถูกต้อง!";
                 Feedback.text += " เกมจบแล้ว!";
                 Answered = true;
-                lastQuestionKey = null; // Reset lastQuestionKey to null to get a new question next time
+                lastQuestionKey = null;
             }
             else
             {
                 Feedback.text = "ไม่ถูกต้อง! ลองอีกครั้ง";
-                StartCoroutine(HideQuizPanelAfterDelay(1f)); // Start coroutine to hide panel after delay
+                StartCoroutine(HideQuizPanelAfterDelay(1f));
             }
 
-            Destroy(itemToDestroy); // Destroy item regardless of the answer
+            // ทำลายไอเทมสำหรับทุกผู้เล่น
+            if (itemToDestroy != null)
+            {
+                photonView.RPC("DestroyItemRPC", RpcTarget.All, itemToDestroy.GetComponent<PhotonView>().ViewID);
+            }
         }
 
         public void OnAnswer1Selected()

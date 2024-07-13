@@ -61,6 +61,7 @@ public class PhotonFriendController : MonoBehaviourPunCallbacks
         }
     }
 
+
     public override void OnFriendListUpdate(List<PhotonFriendInfo> friendList)
     {
         Debug.Log($"Invoke UI to display Photon friends found: {friendList.Count}");

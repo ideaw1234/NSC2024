@@ -105,15 +105,15 @@ namespace Photon.Pun.Demo.PunBasics
             }
 
             // Create the UI
-            if (this.playerUiPrefab != null)
-            {
-                GameObject _uiGo = Instantiate(this.playerUiPrefab);
-                _uiGo.SendMessage("SetTarget", this, SendMessageOptions.RequireReceiver);
-            }
-            else
-            {
-                Debug.LogWarning("<Color=Red><b>Missing</b></Color> PlayerUiPrefab reference on player Prefab.", this);
-            }
+            //if (this.playerUiPrefab != null)
+            //{
+            //    GameObject _uiGo = Instantiate(this.playerUiPrefab);
+            //    _uiGo.SendMessage("SetTarget", this, SendMessageOptions.RequireReceiver);
+            //}
+            //else
+            //{
+            //    Debug.LogWarning("<Color=Red><b>Missing</b></Color> PlayerUiPrefab reference on player Prefab.", this);
+            //}
 
 #if UNITY_5_4_OR_NEWER
             // Unity 5.4 has a new scene management. register a method to call CalledOnLevelWasLoaded.
